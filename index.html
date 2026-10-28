@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Access 🔓 | @leobriec</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           RESET & VARIABLES
+        ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff0050;
+            --neon-purple: #bc13fe;
+            --neon-green: #00ff73;
+            --dark-bg: #030305;
+            --glass-bg: rgba(15, 15, 20, 0.7);
+            --glass-border: rgba(0, 243, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--dark-bg); color: #ffffff;
+            font-family: 'Poppins', sans-serif; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+
+        /* =========================================
+           BACKGROUND (Grid + Orbs)
+        ========================================= */
+        .cyber-grid {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                linear-gradient(transparent 95%, rgba(0, 243, 255, 0.15) 100%),
+                linear-gradient(90deg, transparent 95%, rgba(0, 243, 255, 0.15) 100%);
+            background-size: 40px 40px;
+            transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 10s linear infinite; z-index: -3;
+        }
+
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(80px);
+            z-index: -2; animation: floatOrb 8s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: rgba(0, 243, 255, 0.25); top: 10%; left: 20%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(188, 19, 254, 0.2); bottom: 10%; right: 10%; animation-delay: -4s; }
+
+        /* =========================================
+           GLASS PANELS
+        ========================================= */
+        .step-container {
+            background: var(--glass-bg); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 35px 30px; width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(0, 243, 255, 0.05);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: absolute; opacity: 0; transform: scale(0.9) translateY(30px);
+            pointer-events: none; display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .step-container.active {
+            opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; position: relative;
+            animation: floatPanel 6s ease-in-out infinite;
+        }
+
+        /* =========================================
+           PROFIL CYBERPUNK (CENTRAGE PARFAIT)
+        ========================================= */
+        .cyber-profile {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px 20px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-box {
+            position: relative;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .avatar-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background-image: linear-gradient(var(--dark-bg), var(--dark-bg)), linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            padding: 3px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .profile-username {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .verified-icon { color: #20D5EC; width: 20px; height: 20px; }
+
+        .badge-status {
+            font-size: 0.95rem; font-weight: 600;
+            background: rgba(255, 255, 255, 0.05); display: inline-flex;
+            align-items: center; justify-content: center;
+            padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .status-text {
+            color: #ff3333; text-shadow: 0 0 8px #ff3333;
+            transition: 0.3s; margin-left: 5px;
+        }
+        .status-text.verified { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+
+        /* =========================================
+           BOUTONS ET TEXTE D'AIDE
+        ========================================= */
+        .cyber-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-decoration: none; font-family: 'Orbitron', sans-serif;
+            font-size: 1rem; font-weight: 700; color: #fff; padding: 18px 20px;
+            border-radius: 12px; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s; cursor: pointer; width: 100%; border: none; text-align: center;
+        }
+
+        .tiktok-btn { background: linear-gradient(45deg, var(--neon-pink), #00f2fe); box-shadow: 0 10px 20px rgba(255, 0, 80, 0.3); }
+        .tiktok-btn:hover { box-shadow: 0 15px 30px rgba(0, 242, 254, 0.5); transform: translateY(-3px) scale(1.02); }
+
+        .discord-btn { background: linear-gradient(45deg, #5865F2, var(--neon-purple)); box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3); }
+        .discord-btn:hover { box-shadow: 0 15px 30px rgba(188, 19, 254, 0.5); transform: translateY(-3px) scale(1.02); }
+
+        /* Le petit texte d'aide pour ceux déjà abonnés */
+        .info-text {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: -10px;
+            line-height: 1.4;
+        }
+        .info-text strong {
+            color: var(--neon-cyan);
+        }
+
+        /* =========================================
+           CHARGEMENT & TITRES
+        ========================================= */
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: #fff; text-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
+        .discord-title { text-shadow: 0 0 15px rgba(188, 19, 254, 0.5); font-size: 1.6rem; }
+        
+        .loading-zone {
+            display: none; flex-direction: column; align-items: center; gap: 15px;
+            background: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 12px;
+            border: 1px dashed rgba(0, 243, 255, 0.4); margin-top: 10px;
+        }
+        .spinner {
+            width: 35px; height: 35px; border: 3px solid rgba(0, 243, 255, 0.1);
+            border-top: 3px solid var(--neon-cyan); border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .countdown-text { font-family: 'Poppins', sans-serif; font-weight: 500; color: var(--neon-cyan); font-size: 0.95rem; }
+
+        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
+        @keyframes floatOrb { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, -30px); } }
+        @keyframes floatPanel { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ÉTAPE 1 : TIKTOK -->
+    <div id="step-1" class="step-container active">
+        <h1>🔓 MISSION TIKTOK</h1>
+        
+        <!-- PROFIL -->
+        <div class="cyber-profile">
+            <div class="avatar-box">
+                <!-- NOUVELLE IMAGE INTÉGRÉE ICI -->
+                <img src="https://i.postimg.cc/CzHvXSKn/image.jpg" alt="Avatar" class="avatar-img">
+            </div>
+            
+            <div class="profile-username">
+                @leobriec
+                <svg class="verified-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6 12.6l1.5-1.5 2.6 2.6 6.4-6.4 1.5 1.5-7.9 7.9z"/>
+                </svg>
+            </div>
+
+            <div class="badge-status">
+                Statut : <span class="status-text" id="badge-status">Non Abonné 🔴</span>
+            </div>
+        </div>
+
+        <a href="https://www.tiktok.com/@leobriec" target="_blank" class="cyber-btn tiktok-btn" id="btn-tiktok">
+            ✨ S'ABONNER POUR DÉVERROUILLER
+        </a>
+
+        <!-- TEXTE EXPLICATIF POUR LES DÉJÀ ABONNÉS -->
+        <p class="info-text" id="info-text">
+            💡 <strong>Déjà abonné(e) ?</strong> Clique quand même sur le bouton pour lancer le scan de vérification !
+        </p>
+
+        <div class="loading-zone" id="loading-zone">
+            <div class="spinner"></div>
+            <p class="countdown-text">👀 En attente de l'abonnement...</p>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 2 : DISCORD -->
+    <div id="step-2" class="step-container">
+        <h1 class="discord-title">Accès Autorisé ! 🎉</h1>
+        <p style="color: #ccc; margin-bottom: 10px;">Abonnement confirmé. Bienvenue dans l'élite boss ! 😎 Le portail Discord est grand ouvert. 🎮💬</p>
+        
+        <a href="https://discord.gg/RvqQbsZSQB" target="_blank" class="cyber-btn discord-btn">
+            🚀 REJOINDRE LE SERVEUR
+        </a>
+    </div>
+
+    <script>
+        /* LOGIQUE DE VÉRIFICATION AVANCÉE */
+        const btnTikTok = document.getElementById('btn-tiktok');
+        const infoText = document.getElementById('info-text');
+        const loadingZone = document.getElementById('loading-zone');
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const badgeStatus = document.getElementById('badge-status');
+
+        let isWaitingForReturn = false;
+
+        btnTikTok.addEventListener('click', () => {
+            // Cache le bouton ET le petit texte d'explication
+            btnTikTok.style.display = 'none';
+            infoText.style.display = 'none';
+            
+            // Affiche la zone de chargement
+            loadingZone.style.display = 'flex';
+            
+            const countdownText = document.querySelector('.countdown-text');
+            countdownText.innerHTML = "👀 Vérification de l'abonnement sur l'app...";
+            
+            setTimeout(() => { isWaitingForReturn = true; }, 1000);
+        });
+
+        window.addEventListener('focus', () => {
+            if (isWaitingForReturn) {
+                isWaitingForReturn = false; 
+                
+                const countdownText = document.querySelector('.countdown-text');
+                countdownText.innerHTML = "⏳ Analyse des données... <span id='timer'>3</span>s";
+                
+                let timeLeft = 3;
+                const newTimerSpan = document.getElementById('timer');
+                
+                const countdown = setInterval(() => {
+                    timeLeft--;
+                    newTimerSpan.textContent = timeLeft;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        
+                        countdownText.innerHTML = "✅ Accès validé !";
+                        countdownText.style.color = "#00ff73"; 
+                        document.querySelector('.spinner').style.borderColor = "rgba(0, 255, 115, 0.2)";
+                        document.querySelector('.spinner').style.borderTopColor = "#00ff73";
+                        
+                        badgeStatus.textContent = "Abonné 🟢";
+                        badgeStatus.classList.add('verified');
+
+                        setTimeout(unlockSecretPage, 1200); 
+                    }
+                }, 1000);
+            }
+        });
+
+        function unlockSecretPage() {
+            fireConfetti();
+            step1.classList.remove('active');
+            setTimeout(() => {
+                step1.style.display = 'none';
+                step2.classList.add('active');
+            }, 600);
+        }
+
+        /* SYSTÈME DE CONFETTIS */
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const colors = ['#00f3ff', '#ff0050', '#bc13fe', '#ffffff', '#00ff73'];
+
+        class Particle {
+            constructor() {
+                this.x = canvas.width / 2; this.y = canvas.height / 2;
+                this.r = Math.random() * 6 + 4;
+                this.dx = Math.random() * 20 - 10; this.dy = Math.random() * -20 - 5;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.tilt = Math.floor(Math.random() * 10) - 10;
+                this.tiltAngleInc = (Math.random() * 0.07) + 0.05;
+                this.tiltAngle = 0;
+            }
+            update() {
+                this.dy += 0.5; this.x += this.dx; this.y += this.dy;
+                this.tiltAngle += this.tiltAngleInc;
+                this.tilt = Math.sin(this.tiltAngle) * 15;
+            }
+            draw() {
+                ctx.beginPath(); ctx.lineWidth = this.r; ctx.strokeStyle = this.color;
+                ctx.moveTo(this.x + this.tilt + this.r, this.y);
+                ctx.lineTo(this.x + this.tilt, this.y + this.tilt + this.r);
+                ctx.stroke();
+            }
+        }
+
+        function fireConfetti() {
+            for (let i = 0; i < 150; i++) particles.push(new Particle());
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            requestAnimationFrame(animateConfetti);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                if (p.y > canvas.height) particles.splice(index, 1);
+            });
+        }
+    </script>
+</body>
+</html>
