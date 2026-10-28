@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Access 🔓 | @leobriec</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           RESET & VARIABLES
+        ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff003c;
+            --neon-purple: #bc13fe;
+            --dark-bg: #030305;
+            --glass-bg: rgba(15, 15, 20, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* =========================================
+           BACKGROUND ULTRA MODERN (Grid + Orbs)
+        ========================================= */
+        .cyber-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                linear-gradient(transparent 95%, rgba(0, 243, 255, 0.15) 100%),
+                linear-gradient(90deg, transparent 95%, rgba(0, 243, 255, 0.15) 100%);
+            background-size: 40px 40px;
+            transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 10s linear infinite;
+            z-index: -3;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -2;
+            animation: floatOrb 8s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: rgba(0, 243, 255, 0.3); top: 20%; left: 30%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(188, 19, 254, 0.2); bottom: 10%; right: 20%; animation-delay: -4s; }
+
+        /* =========================================
+           GLASSMORPHISM PANELS
+        ========================================= */
+        .step-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-left: 1px solid rgba(255,255,255,0.2);
+            border-radius: 24px;
+            padding: 35px;
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 243, 255, 0.05);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.9) translateY(30px);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        /* Cacher la scrollbar pour faire plus propre */
+        .step-container::-webkit-scrollbar { display: none; }
+
+        .step-container.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            position: relative;
+            animation: floatPanel 6s ease-in-out infinite;
+        }
+
+        /* =========================================
+           VRAI COMPTE TIKTOK (WIDGET OFFICIEL)
+        ========================================= */
+        .tiktok-wrapper {
+            width: 100%;
+            background: #fff; /* Fond blanc car le widget TikTok est clair par défaut */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3), inset 0 0 10px rgba(0, 243, 255, 0.2);
+            position: relative;
+            /* Permet de limiter la taille du widget si TikTok charge trop de vidéos */
+            max-height: 350px; 
+            overflow-y: auto;
+        }
+
+        /* =========================================
+           TYPOGRAPHIE
+        ========================================= */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .discord-title { text-shadow: 0 0 15px rgba(188, 19, 254, 0.5); }
+        
+        p { font-size: 0.95rem; color: #c4c4c4; line-height: 1.5; }
+
+        /* =========================================
+           BOUTONS MODERNES
+        ========================================= */
+        .cyber-btn {
+            display: inline-block;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .tiktok-btn {
+            background: linear-gradient(45deg, #ff0050, #00f2fe);
+            border: none;
+            box-shadow: 0 10px 20px rgba(255, 0, 80, 0.3);
+        }
+        .tiktok-btn:hover {
+            box-shadow: 0 15px 30px rgba(0, 242, 254, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            filter: brightness(1.2);
+        }
+
+        .discord-btn {
+            background: linear-gradient(45deg, #5865F2, #bc13fe);
+            border: none;
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        }
+        .discord-btn:hover {
+            box-shadow: 0 15px 30px rgba(188, 19, 254, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            filter: brightness(1.2);
+        }
+
+        /* =========================================
+           SYSTÈME DE CHARGEMENT
+        ========================================= */
+        .loading-zone {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed rgba(0, 243, 255, 0.3);
+        }
+
+        .spinner {
+            width: 35px;
+            height: 35px;
+            border: 3px solid rgba(0, 243, 255, 0.1);
+            border-top: 3px solid var(--neon-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .countdown-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: var(--neon-cyan);
+            font-size: 0.95rem;
+        }
+
+        /* =========================================
+           CANVAS CONFETTIS
+        ========================================= */
+        #confetti-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 999;
+        }
+
+        /* =========================================
+           ANIMATIONS KEYFRAMES
+        ========================================= */
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
+        @keyframes floatOrb { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, -30px); } }
+        @keyframes floatPanel { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 500px) {
+            .step-container { padding: 25px 15px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Effets de fond -->
+    <div class="cyber-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ÉTAPE 1 : TIKTOK -->
+    <div id="step-1" class="step-container active">
+        <h1>🔓 Mission TikTok</h1>
+        <p>Abonne-toi directement ci-dessous pour ouvrir le portail ! 👀🔥</p>
+        
+        <!-- TON VRAI COMPTE TIKTOK (Intégration Officielle) -->
+        <div class="tiktok-wrapper">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@leobriec" data-unique-id="leobriec" data-embed-type="creator" style="max-width: 100%; min-width: 288px;">
+                <section> 
+                    <a target="_blank" href="https://www.tiktok.com/@leobriec?refer=creator_embed">@leobriec</a> 
+                </section>
+            </blockquote>
+            <!-- Script officiel de TikTok pour charger ton profil -->
+            <script async src="https://www.tiktok.com/embed.js"></script>
+        </div>
+
+        <!-- Bouton pour déclencher la vérification -->
+        <a href="https://www.tiktok.com/@leobriec" target="_blank" class="cyber-btn tiktok-btn" id="btn-tiktok">
+            ✨ J'y suis abonné ! (Vérifier)
+        </a>
+
+        <!-- Zone de chargement -->
+        <div class="loading-zone" id="loading-zone">
+            <div class="spinner"></div>
+            <p class="countdown-text">👀 En attente de l'abonnement...</p>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 2 : DISCORD -->
+    <div id="step-2" class="step-container">
+        <h1 class="discord-title">Accès Autorisé ! 🎉</h1>
+        <p>Abonnement confirmé. Bienvenue dans l'élite boss ! 😎 Le portail Discord est grand ouvert. 🎮💬</p>
+        
+        <a href="https://discord.gg/RvqQbsZSQB" target="_blank" class="cyber-btn discord-btn">
+            🚀 Rejoindre le Serveur
+        </a>
+    </div>
+
+    <script>
+        /* LOGIQUE DE VÉRIFICATION AVANCÉE (Tab Focus) */
+        const btnTikTok = document.getElementById('btn-tiktok');
+        const loadingZone = document.getElementById('loading-zone');
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+
+        let isWaitingForReturn = false;
+
+        btnTikTok.addEventListener('click', () => {
+            btnTikTok.style.display = 'none';
+            loadingZone.style.display = 'flex';
+            
+            const countdownText = document.querySelector('.countdown-text');
+            countdownText.innerHTML = "👀 Vérification de l'abonnement sur l'app...";
+            
+            // On laisse 1 seconde avant d'activer le tracker de retour
+            setTimeout(() => { isWaitingForReturn = true; }, 1000);
+        });
+
+        window.addEventListener('focus', () => {
+            if (isWaitingForReturn) {
+                isWaitingForReturn = false; 
+                
+                const countdownText = document.querySelector('.countdown-text');
+                countdownText.innerHTML = "⏳ Synchronisation... <span id='timer'>3</span>s";
+                
+                let timeLeft = 3;
+                const newTimerSpan = document.getElementById('timer');
+                
+                const countdown = setInterval(() => {
+                    timeLeft--;
+                    newTimerSpan.textContent = timeLeft;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        countdownText.innerHTML = "✅ Profil vérifié avec succès !";
+                        countdownText.style.color = "#00ff73"; 
+                        
+                        document.querySelector('.spinner').style.borderColor = "rgba(0, 255, 115, 0.2)";
+                        document.querySelector('.spinner').style.borderTopColor = "#00ff73";
+
+                        setTimeout(unlockSecretPage, 1000); 
+                    }
+                }, 1000);
+            }
+        });
+
+        function unlockSecretPage() {
+            fireConfetti();
+            step1.classList.remove('active');
+            setTimeout(() => {
+                step1.style.display = 'none';
+                step2.classList.add('active');
+            }, 600);
+        }
+
+        /* SYSTÈME DE CONFETTIS */
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const colors = ['#00f3ff', '#ff0050', '#bc13fe', '#ffffff', '#5865F2'];
+
+        class Particle {
+            constructor() {
+                this.x = canvas.width / 2; this.y = canvas.height / 2;
+                this.r = Math.random() * 6 + 4;
+                this.dx = Math.random() * 20 - 10; this.dy = Math.random() * -20 - 5;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.tilt = Math.floor(Math.random() * 10) - 10;
+                this.tiltAngleInc = (Math.random() * 0.07) + 0.05;
+                this.tiltAngle = 0;
+            }
+            update() {
+                this.dy += 0.5; this.x += this.dx; this.y += this.dy;
+                this.tiltAngle += this.tiltAngleInc;
+                this.tilt = Math.sin(this.tiltAngle) * 15;
+            }
+            draw() {
+                ctx.beginPath(); ctx.lineWidth = this.r; ctx.strokeStyle = this.color;
+                ctx.moveTo(this.x + this.tilt + this.r, this.y);
+                ctx.lineTo(this.x + this.tilt, this.y + this.tilt + this.r);
+                ctx.stroke();
+            }
+        }
+
+        function fireConfetti() {
+            for (let i = 0; i < 150; i++) particles.push(new Particle());
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            requestAnimationFrame(animateConfetti);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                if (p.y > canvas.height) particles.splice(index, 1);
+            });
+        }
+    </script>
+</body>
+</html>
